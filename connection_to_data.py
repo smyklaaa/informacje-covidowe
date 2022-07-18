@@ -26,3 +26,18 @@ class ConnectionToData:
         for country in data:
             list_of_countries.append(country["Country"])
         return list_of_countries
+
+    def time_range_years(self, main_data):
+        """metoda okreslajaca ramy czasowe pandemi"""
+
+        years = []
+        for day in main_data:
+            day = day["Date"]
+            day = day.split("T")
+            day = day[0]
+            day = day.split("-")
+            years.append(day[0])
+        years = set(years)
+
+        return years
+
