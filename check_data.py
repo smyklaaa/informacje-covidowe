@@ -23,12 +23,12 @@ class CheckData:
                 data = self.make_date_for_year(year)
 
                 beginning_of_year = self.search_date(data[0])
-                beginning_of_next_year = self.search_date(data[1])
+                end_of_year = self.search_date(data[1])
 
                 beginning_of_year = beginning_of_year[self.what_data]
-                beginning_of_next_year = beginning_of_next_year[self.what_data]
+                end_of_year = end_of_year[self.what_data]
 
-                final_result = beginning_of_next_year - beginning_of_year
+                final_result = end_of_year - beginning_of_year
 
                 return final_result
 
