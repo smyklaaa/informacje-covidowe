@@ -16,22 +16,28 @@ class Confirmed:
             if self.what_time == "1":
                 os.system("cls")
                 year = input("Podaj rok ktory chcesz sprawdzić : ")
-                while len(year) > 4:
-                    year = input("Podałeś rok z pryszlosci podaj rok ktory chcesz sprawdzić : ")
 
-                years = ConnectionToData().time_range_years()
+                years = ConnectionToData(self.country).time_range_years(self.main_data)
+
                 while year not in years:
-                    year = input("Podałeś rok z pryszlosci podaj rok ktory chcesz sprawdzić : ")
+                    year = input("Podałeś rok spoza okresu pandemi, podaj poprawny : ")
 
+                if year == self.return_year_from_last_date(0):
+                    first_day_year = f"{year}-03-04"
+                    last_day_year = f"{year}-12-31"
 
+                elif year == self.return_year_from_last_date(-1):
+                    first_day_year = f"{year}-01-01"
+                    last_day_year = self.main_data[-1]["Date"]
+                    last_day_year = last_day_year.split("T")
+                    last_day_year = last_day_year[0]
 
-
-
-                first_day_year = self.check_pandemic(f"{year}-01-01")
-                first_day_next_year = f"{int(year)+1}-01-01"
+                else:
+                    first_day_year = f"{year}-01-01"
+                    last_day_year = f"{year}-12-31"
 
                 beginning_of_year = self.search_date(first_day_year)
-                beginning_of_next_year = self.search_date(first_day_next_year)
+                beginning_of_next_year = self.search_date(last_day_year)
 
                 beginning_of_year = beginning_of_year["Confirmed"]
                 beginning_of_next_year = beginning_of_next_year["Confirmed"]
@@ -51,6 +57,14 @@ class Confirmed:
                 number_of_people = self.main_data[-1]["Confirmed"]
                 print(f"Przez cały okres pandemi : {number_of_people} osób")
                 break
+
+    def return_year_from_last_date(self, first_or_last):
+        year = self.main_data[first_or_last]["Date"]
+        year = year.split("T")
+        year = year[0]
+        year = year.split("-")
+        year = year[0]
+        return str(year)
 
     def search_date(self, date):
         """metoda zwracajaca slownik listy ktory pasuje do naszej daty"""
@@ -72,14 +86,14 @@ class Confirmed:
             date = f"{date[0]}-{date[1]}-{date[2]}"
 
             if check_date < date_time:
-                first = mid -1
+                first = mid + 1
                 mid = int((first + last)/2)
                 check_date = self.main_data[mid]["Date"]
                 check_date = check_date.split("T")
                 check_date = check_date[0]
 
             elif check_date > date_time:
-                last = mid -1
+                last = mid - 1
                 mid = int((first + last)/2)
                 check_date = self.main_data[mid]["Date"]
                 check_date = check_date.split("T")
@@ -87,38 +101,3 @@ class Confirmed:
 
         return self.main_data[mid]
 
-    def check_pandemic(self, date):
-        """funkcja sprawdza czy data podana przez uzytkownika pokrywa sie z pandemia"""
-
-
-
-        date = date.split("-")
-        date = datetime.datetime(int(date[0]), int(date[1]), int(date[2]))
-        check_data = self.make_datetime(self.main_data[0]["Date"])
-
-        while date < check_data:
-            date = input("Podałes date z przed pandemi, podaj poprawny rok: ")
-            date = self.make_datetime(date)
-
-        while date > check_data:
-            date = input("Podałes date z przyszłosci, podaj poprawny rok: ")
-            while len(date) > 4:
-                date = input("Podałes date z przyszłosci, podaj poprawny rok: ")
-            date = self.make_datetime(date)
-
-            while date < check_data:
-                date = input("Podałes date z przed pandemi, podaj poprawny rok: ")
-                date = self.make_datetime(date)
-
-        return date
-
-    def make_datetime(self, check_date):
-        """funkcja zwracajaca przekonwertowana date string na typ datatime"""
-
-        check_date = check_date.split("T")
-        print(check_date)
-        check_date = check_date[0]
-        check_date = check_date.split("-")
-        print(check_date)
-        check_date = datetime.datetime(int(check_date[0]), int(check_date[1]), int(check_date[2]))
-        return check_date
