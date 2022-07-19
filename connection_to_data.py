@@ -27,17 +27,23 @@ class ConnectionToData:
             list_of_countries.append(country["Country"])
         return list_of_countries
 
-    def time_range_years(self, main_data):
+    def time_range_pandemic(self, main_data, time):
         """metoda okreslajaca ramy czasowe pandemi"""
 
-        years = []
+        unique_values = []
         for day in main_data:
             day = day["Date"]
             day = day.split("T")
             day = day[0]
             day = day.split("-")
-            years.append(day[0])
-        years = set(years)
+            if time == "year":
+                unique_values.append(day[0])
+            elif time == "month":
+                unique_values.append(f"{day[0]}-{day[1]}")
+            elif time == "day":
+                unique_values.append(f"{day[0]}-{day[1]}-{day[3]}")
+        unique_values = set(unique_values)
 
-        return years
+        return unique_values
+
 
