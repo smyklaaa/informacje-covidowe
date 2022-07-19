@@ -33,7 +33,7 @@ def main():
             what_next = "Confirmed"
 
             result = CheckData(what_time, main_data, country, what_next).main()
-            print(f"Suma zakażeń w podanym roku: {result}")
+            print(f"Suma zakażeń w podanym okresie: {result}")
 
 
 

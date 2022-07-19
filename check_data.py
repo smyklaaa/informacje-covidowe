@@ -20,7 +20,7 @@ class CheckData:
                 os.system("cls")
                 year = input("Podaj rok ktory chcesz sprawdzić : ")
 
-                data = self.make_date_for_year(year)
+                data = self.make_date(year, "year")
 
                 beginning_of_year = self.search_date(data[0])
                 end_of_year = self.search_date(data[1])
@@ -35,6 +35,20 @@ class CheckData:
             elif self.what_time == "2":
                 os.system("cls")
 
+                month = input("Podaj miesiąc  ktory chcesz sprawdzić (RRRR-MM): ")
+
+                data = self.make_date(month, "month")     #DDDDDDDDDDDDDDDDDDDDDDDDDDD
+
+                beginning_of_month = self.search_date(data[0])
+                end_of_month = self.search_date(data[1])
+
+                beginning_of_month = beginning_of_month[self.what_data]
+                end_of_month = end_of_month[self.what_data]
+
+                final_result = end_of_month - beginning_of_month
+
+                return final_result
+
             elif self.what_time == "3":
                 os.system("cls")
 
@@ -44,15 +58,23 @@ class CheckData:
                 print(f"Przez cały okres pandemi : {number_of_people} osób")
                 break
 
-    def return_year_from_last_date(self, first_or_last):
-        """metoda zwracajaca rok paczatku lub konca danych"""
+    def return_last_or_first_date(self, first_or_last, time_range):
+        """metoda zwracajaca poczatkowa lub koncowa date pandemi dla roku lub miesiaca lub dnia"""
 
-        year = self.main_data[first_or_last]["Date"]
-        year = year.split("T")
-        year = year[0]
-        year = year.split("-")
-        year = year[0]
-        return str(year)
+        date = self.main_data[first_or_last]["Date"]
+        date = date.split("T")
+        date = date[0]
+        date = date.split("-")
+
+        if time_range == "year":
+            date = date[0]
+            return str(date)
+        elif time_range == "month":
+            date = f"{date[0]}-{date[1]}"
+            return date
+        elif time_range == "day":
+            date = f"{date[0]}-{date[1]}-{date[2]}"
+            return date
 
     def search_date(self, date):
         """metoda zwracajaca slownik z listy głownych danych ktory pasuje do podanej daty"""
@@ -89,27 +111,45 @@ class CheckData:
 
         return self.main_data[mid]
 
-    def make_date_for_year(self, year):
+    def make_date(self, user_data, time_range):
         """metoda sprawdza czy podany rok jest z okresu pandemi
         oraz zwraca przetworzone daty poczatku i konca okresu ktorego szukamy"""
 
-        years = ConnectionToData(self.country).time_range_years(self.main_data)
+        time_range_data = ConnectionToData(self.country).time_range_pandemic(self.main_data, time_range)
 
-        while year not in years:
-            year = input("Podałeś rok spoza okresu pandemi, podaj poprawny : ")
+        while user_data not in time_range_data:
+            user_data = input("Podałeś czas spoza okresu pandemi, podaj poprawny : ")
 
-        if year == self.return_year_from_last_date(0):
-            first_day_year = f"{year}-03-04"
-            last_day_year = f"{year}-12-31"
+        if time_range == "year":
+            if user_data == self.return_last_or_first_date(0, time_range):
+                first_day = f"{user_data}-03-04"
+                last_day = f"{user_data}-12-31"
 
-        elif year == self.return_year_from_last_date(-1):
-            first_day_year = f"{year}-01-01"
-            last_day_year = self.main_data[-1]["Date"]
-            last_day_year = last_day_year.split("T")
-            last_day_year = last_day_year[0]
+            elif user_data == self.return_last_or_first_date(-1, time_range):
+                first_day = f"{user_data}-01-01"
+                last_day = self.main_data[-1]["Date"]
+                last_day = last_day.split("T")
+                last_day = last_day[0]
 
-        else:
-            first_day_year = f"{year}-01-01"
-            last_day_year = f"{year}-12-31"
+            else:
+                first_day = f"{user_data}-01-01"
+                last_day = f"{user_data}-12-31"
 
-        return [first_day_year, last_day_year]
+            return [first_day, last_day]
+
+        elif time_range == "month":
+            if user_data == self.return_last_or_first_date(0, time_range):
+                first_day = f"{user_data}-04"
+                last_day = f"{user_data}-31"
+
+            elif user_data == self.return_last_or_first_date(-1, time_range):
+                first_day = f"{user_data}-01"
+                last_day = self.main_data[-1]["Date"]
+                last_day = last_day.split("T")
+                last_day = last_day[0]
+
+            else:
+                first_day = f"{user_data}-01"
+                last_day = f"{user_data}-28"           #tu dałem bezpieczne dane ale to trzeba zmienic
+
+            return [first_day, last_day]
