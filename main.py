@@ -1,6 +1,6 @@
 import os
 from connection_to_data import ConnectionToData
-from confirmed import Confirmed
+from check_data import CheckData
 
 
 def main():
@@ -10,6 +10,7 @@ def main():
 
     what_next = input("Wpisz numer danych które chcesz sprawdzić:\n"
                       "(1)Zakażenia\n(2)Zgony\n(3)Ozdrowieńcy\n")
+
     while what_next not in ("1", "2", "3"):
         print("Niepoprawne zapytanie")
         what_next = input("Wpisz numer danych które chcesz sprawdzić:\n"
@@ -29,7 +30,9 @@ def main():
                                   "(1)Suma w ciagu roku\n(2)Suma w ciągu miesiaca\n"
                                   "(3)Suma w ciągu dnia\n(4)Cały okres pandemi\n")
 
-            result = Confirmed(what_time, main_data, country).main()
+            what_next = "Confirmed"
+
+            result = CheckData(what_time, main_data, country, what_next).main()
             print(f"Suma zakażeń w podanym roku: {result}")
 
 
@@ -47,6 +50,8 @@ def main():
                                   "(3)Suma w ciągu dnia\n(4)Cały okres pandemi\n")
 
             what_next = "Deaths"
+            result = CheckData(what_time, main_data, country, what_next).main()
+            print(f"Suma zgonow w podanym roku: {result}")
 
         elif what_next == "3":
             os.system("cls")
@@ -61,5 +66,7 @@ def main():
                                   "(3)Suma w ciągu dnia\n(4)Cały okres pandemi\n")
 
             what_next = "Recovered"
+            result = CheckData(what_time, main_data, country, what_next).main()
+            print(f"Suma osób które wyzdrowiały w podanym roku: {result}")
 
 main()
