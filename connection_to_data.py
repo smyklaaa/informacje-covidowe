@@ -40,10 +40,21 @@ class ConnectionToData:
                 unique_values.append(day[0])
             elif time == "month":
                 unique_values.append(f"{day[0]}-{day[1]}")
-            elif time == "day":
-                unique_values.append(f"{day[0]}-{day[1]}-{day[3]}")
         unique_values = set(unique_values)
 
         return unique_values
+
+    def time_range_for_day(self, main_data):
+        """metoda zwracajaca liste wszystkich dni pandemi"""
+
+        days = []
+        for day in main_data:
+            day = day["Date"]
+            day = day.split("T")
+            day = day[0]
+            days.append(day)
+
+        return days
+
 
 
