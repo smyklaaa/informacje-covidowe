@@ -48,7 +48,10 @@ class CheckData:
             elif self.what_time == "4":
                 os.system("cls")
                 number_of_people = self.main_data[-1][self.what_data]
-                print(f"Przez cały okres pandemi : {number_of_people} osób")
+                if number_of_people <= 0:
+                    print("Niestety nie mamy odpowiedznich danych")
+                else:
+                    print(f"Przez cały okres pandemi : {number_of_people} osób")
                 break
 
     def data_processing(self, user_time, time):
