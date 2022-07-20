@@ -31,6 +31,8 @@ class CheckData:
                 end_of_year = end_of_year[self.what_data]
 
                 final_result = end_of_year - beginning_of_year
+                if final_result <= 0:
+                    final_result = "Przepraszamy ale nie mamy danych do podanego zapytania"
 
                 return final_result
 
@@ -39,7 +41,7 @@ class CheckData:
 
                 month = input("Podaj miesiąc  ktory chcesz sprawdzić (RRRR-MM): ")
 
-                data = self.make_date(month, "month")     #DDDDDDDDDDDDDDDDDDDDDDDDDDD
+                data = self.make_date(month, "month")
 
                 beginning_of_month = self.search_date(data[0])
                 end_of_month = self.search_date(data[1])
@@ -48,6 +50,8 @@ class CheckData:
                 end_of_month = end_of_month[self.what_data]
 
                 final_result = end_of_month - beginning_of_month
+                if final_result <= 0:
+                    final_result = "Przepraszamy ale nie mamy danych do podanego zapytania"
 
                 return final_result
 
@@ -154,7 +158,7 @@ class CheckData:
             else:
                 first_day = f"{user_data}-01"
                 day = self.return_last_day_of_the_month(user_data)
-                last_day = f"{user_data}-{day}"           #tu dałem bezpieczne dane ale to trzeba zmienic
+                last_day = f"{user_data}-{day}"
 
             return [first_day, last_day]
 
@@ -164,11 +168,15 @@ class CheckData:
         user_data = user_data.split("-")
         if user_data[1] in self.longer_months:
             day = 31
+            return day
+
         elif user_data[1] in self.shorter_months:
             day = 30
+            return day
+
         elif user_data == "02":
             if int(user_data[0]) % 4 == 0:
                 day = 29
             else:
                 day = 28
-        return day
+            return day
