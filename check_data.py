@@ -11,6 +11,8 @@ class CheckData:
         self.main_data = main_data
         self.country = country
         self.what_data = what_data
+        self.longer_months = ["01", "03", "05", "07", "08", "10", "12"]
+        self.shorter_months = ["04", "06", "09", "11"]
 
     def main(self):
         """metoda zarzadzajaca """
@@ -122,7 +124,7 @@ class CheckData:
 
         if time_range == "year":
             if user_data == self.return_last_or_first_date(0, time_range):
-                first_day = f"{user_data}-03-04"
+                first_day = self.return_last_or_first_date(0, "day")
                 last_day = f"{user_data}-12-31"
 
             elif user_data == self.return_last_or_first_date(-1, time_range):
@@ -139,8 +141,9 @@ class CheckData:
 
         elif time_range == "month":
             if user_data == self.return_last_or_first_date(0, time_range):
-                first_day = f"{user_data}-04"
-                last_day = f"{user_data}-31"
+                first_day = self.return_last_or_first_date(0, "day")
+                day = self.return_last_day_of_the_month(user_data)
+                last_day = f"{user_data}-{day}"
 
             elif user_data == self.return_last_or_first_date(-1, time_range):
                 first_day = f"{user_data}-01"
@@ -150,6 +153,22 @@ class CheckData:
 
             else:
                 first_day = f"{user_data}-01"
-                last_day = f"{user_data}-28"           #tu dałem bezpieczne dane ale to trzeba zmienic
+                day = self.return_last_day_of_the_month(user_data)
+                last_day = f"{user_data}-{day}"           #tu dałem bezpieczne dane ale to trzeba zmienic
 
             return [first_day, last_day]
+
+    def return_last_day_of_the_month(self, user_data):
+        """metoda sprawdzajaca jaki jest ostatni dzien podanego przez uzytkownika miesiaca"""
+
+        user_data = user_data.split("-")
+        if user_data[1] in self.longer_months:
+            day = 31
+        elif user_data[1] in self.shorter_months:
+            day = 30
+        elif user_data == "02":
+            if int(user_data[0]) % 4 == 0:
+                day = 29
+            else:
+                day = 28
+        return day
