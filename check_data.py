@@ -20,7 +20,7 @@ class CheckData:
         while self.what_time in ("1", "2", "3", "4"):
             if self.what_time == "1":
                 os.system("cls")
-                year = input("Podaj rok ktory chcesz sprawdzić : ")
+                year = input("Podaj rok ktory chcesz sprawdzić :")
 
                 data = self.make_date(year, "year")
 
@@ -39,7 +39,7 @@ class CheckData:
             elif self.what_time == "2":
                 os.system("cls")
 
-                month = input("Podaj miesiąc  ktory chcesz sprawdzić (RRRR-MM): ")
+                month = input("Podaj miesiąc  ktory chcesz sprawdzić (RRRR-MM):")
 
                 data = self.make_date(month, "month")
 
@@ -58,11 +58,81 @@ class CheckData:
             elif self.what_time == "3":
                 os.system("cls")
 
+                day = input("Podaj dzień  ktory chcesz sprawdzić (RRRR-MM-DD):")
+
+                final_result = self.make_date_for_day_request(day)
+
+                if final_result <= 0:
+                    final_result = "Przepraszamy ale nie mamy danych do podanego zapytania"
+
+                return final_result
+
             elif self.what_time == "4":
                 os.system("cls")
                 number_of_people = self.main_data[-1][self.what_data]
                 print(f"Przez cały okres pandemi : {number_of_people} osób")
                 break
+
+    def make_date_for_day_request(self, user_day):
+        """metoda zwracajaca liczbe dancy o ktore zapytał uzytkownik
+            jezeli jego zapytanie dotyczylo konkretnego dnia"""
+
+        time_range_data = ConnectionToData(self.country).time_range_for_day(self.main_data)
+        while user_day not in time_range_data:
+            user_day = input("Podałeś dzien spoza okresu pandemi, podaj poprawny : ")
+
+        first_day_pandemic = self.main_data[0]["Date"]
+        first_day_pandemic = first_day_pandemic.split("T")
+        first_day_pandemic = first_day_pandemic[0]
+
+        if user_day == first_day_pandemic:
+            return self.main_data[0][self.what_data]
+        else:
+            user_day_split = user_day.split("-")
+            if user_day_split[2] == "01" and user_day_split[1] == "01":
+                previous_day = f"{int(user_day_split[0])-1}-12-31"
+
+                previous_day = self.search_date(previous_day)
+                user_day = self.search_date(user_day)
+
+                previous_day = previous_day[self.what_data]
+                user_day = user_day[self.what_data]
+
+                return user_day - previous_day
+
+            elif user_day_split[2] == "01":
+                day = self.return_last_day_of_the_month(f"{user_day_split[0]}-0{int(user_day_split[1])-1}")
+
+                if int(user_day_split[1])-1 < 10:
+                    verified_month = f"0{int(user_day_split[1])-1}"
+                else:
+                    verified_month = int(user_day_split[1])-1
+
+                previous_day = f"{user_day_split[0]}-{verified_month}-{day}"
+
+                previous_day = self.search_date(previous_day)
+                user_day = self.search_date(user_day)
+
+                previous_day = previous_day[self.what_data]
+                user_day = user_day[self.what_data]
+
+                return user_day - previous_day
+
+            else:
+                day = int(user_day_split[2])-1
+                if day < 10:
+                    day = f"0{day}"
+
+                previous_day = f"{user_day_split[0]}-{user_day_split[1]}-{day}"
+
+                previous_day = self.search_date(previous_day)
+                user_day = self.search_date(user_day)
+
+                previous_day = previous_day[self.what_data]
+                user_day = user_day[self.what_data]
+
+                return user_day - previous_day
+
 
     def return_last_or_first_date(self, first_or_last, time_range):
         """metoda zwracajaca poczatkowa lub koncowa date pandemi dla roku lub miesiaca lub dnia"""
@@ -174,7 +244,7 @@ class CheckData:
             day = 30
             return day
 
-        elif user_data == "02":
+        elif user_data[1] == "02":
             if int(user_data[0]) % 4 == 0:
                 day = 29
             else:
