@@ -81,6 +81,7 @@ def main():
             if go_on == "t":
                 os.system("cls")
             else:
+                os.system("cls")
                 break
 
         go_on = input("Czy chcesz wybrac inne panstwo? t/n: ")
