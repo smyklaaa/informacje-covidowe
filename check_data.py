@@ -128,7 +128,6 @@ class CheckData:
 
                 return user_day - previous_day
 
-
     def return_last_or_first_date(self, first_or_last, time_range):
         """metoda zwracajaca poczatkowa lub koncowa date pandemi dla roku lub miesiaca lub dnia"""
 

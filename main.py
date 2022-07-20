@@ -2,6 +2,8 @@ import os
 from connection_to_data import ConnectionToData
 from check_data import CheckData
 
+print("Zródło danych: https://covid19api.com/")
+
 
 def main():
     country = input("Jakie panstwo chcesz sprawdzić? ANG: ")
@@ -79,4 +81,6 @@ def main():
             os.system("cls")
         else:
             break
+
+
 main()
