@@ -22,17 +22,7 @@ class CheckData:
                 os.system("cls")
                 year = input("Podaj rok ktory chcesz sprawdzić :")
 
-                data = self.make_date(year, "year")
-
-                beginning_of_year = self.search_date(data[0])
-                end_of_year = self.search_date(data[1])
-
-                beginning_of_year = beginning_of_year[self.what_data]
-                end_of_year = end_of_year[self.what_data]
-
-                final_result = end_of_year - beginning_of_year
-                if final_result <= 0:
-                    final_result = "Przepraszamy ale nie mamy danych do podanego zapytania"
+                final_result = self.data_processing(year, "year")
 
                 return final_result
 
@@ -40,18 +30,7 @@ class CheckData:
                 os.system("cls")
 
                 month = input("Podaj miesiąc  ktory chcesz sprawdzić (RRRR-MM):")
-
-                data = self.make_date(month, "month")
-
-                beginning_of_month = self.search_date(data[0])
-                end_of_month = self.search_date(data[1])
-
-                beginning_of_month = beginning_of_month[self.what_data]
-                end_of_month = end_of_month[self.what_data]
-
-                final_result = end_of_month - beginning_of_month
-                if final_result <= 0:
-                    final_result = "Przepraszamy ale nie mamy danych do podanego zapytania"
+                final_result = self.data_processing(month, "month")
 
                 return final_result
 
@@ -59,10 +38,9 @@ class CheckData:
                 os.system("cls")
 
                 day = input("Podaj dzień  ktory chcesz sprawdzić (RRRR-MM-DD):")
-
                 final_result = self.make_date_for_day_request(day)
 
-                if final_result <= 0:
+                if final_result < 0:
                     final_result = "Przepraszamy ale nie mamy danych do podanego zapytania"
 
                 return final_result
@@ -72,6 +50,23 @@ class CheckData:
                 number_of_people = self.main_data[-1][self.what_data]
                 print(f"Przez cały okres pandemi : {number_of_people} osób")
                 break
+
+    def data_processing(self, user_time, time):
+        """funkcja przetwarzajaca dane od uzytkownika """
+
+        data = self.make_date(user_time, time)
+
+        beginning_of_year = self.search_date(data[0])
+        end_of_year = self.search_date(data[1])
+
+        beginning_of_year = beginning_of_year[self.what_data]
+        end_of_year = end_of_year[self.what_data]
+
+        final_result = end_of_year - beginning_of_year
+        if final_result < 0:
+            final_result = "Przepraszamy ale nie mamy danych do podanego zapytania"
+
+        return final_result
 
     def make_date_for_day_request(self, user_day):
         """metoda zwracajaca liczbe dancy o ktore zapytał uzytkownik
@@ -188,7 +183,7 @@ class CheckData:
         return self.main_data[mid]
 
     def make_date(self, user_data, time_range):
-        """metoda sprawdza czy podany rok jest z okresu pandemi
+        """metoda sprawdza czy podany rok lub miesiac jest z okresu pandemi
         oraz zwraca przetworzone daty poczatku i konca okresu ktorego szukamy"""
 
         time_range_data = ConnectionToData(self.country).time_range_pandemic(self.main_data, time_range)
