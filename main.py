@@ -35,8 +35,6 @@ def main():
             result = CheckData(what_time, main_data, country, what_next).main()
             print(f"Suma zakażeń w podanym okresie: {result}")
 
-
-
         elif what_next == "2":
             os.system("cls")
             what_time = input("Wpisz numer danych które chcesz sprawdzić:\n"
@@ -51,7 +49,7 @@ def main():
 
             what_next = "Deaths"
             result = CheckData(what_time, main_data, country, what_next).main()
-            print(f"Suma zgonow w podanym roku: {result}")
+            print(f"Suma zgonow w podanym okresie: {result}")
 
         elif what_next == "3":
             os.system("cls")
@@ -67,6 +65,6 @@ def main():
 
             what_next = "Recovered"
             result = CheckData(what_time, main_data, country, what_next).main()
-            print(f"Suma osób które wyzdrowiały w podanym roku: {result}")
+            print(f"Suma osób które wyzdrowiały w podanym okresie: {result}")
 
 main()
