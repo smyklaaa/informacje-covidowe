@@ -12,7 +12,7 @@ class ConnectionToData:
         """polaczeni sie z glownymi danymi """
 
         while self.country not in self.make_list_of_countries():
-            self.country = input("Nie znaleziono kraju, jakie panstwo chcesz sprawdzić? ANG: ")
+            self.country = input("Nie znaleziono kraju, jakie panstwo chcesz sprawdzić? ANG: ").title()
         response = requests.get(f"{self.API_URL_COUNTRY}{self.country}")
         main_data = response.json()
         return main_data
