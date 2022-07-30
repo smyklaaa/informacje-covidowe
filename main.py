@@ -7,7 +7,7 @@ print("Zródło danych: https://covid19api.com/")
 
 def main():
     while True:
-        country = input("Jakie panstwo chcesz sprawdzić? ANG: ")
+        country = input("Jakie panstwo chcesz sprawdzić? ANG: ").title()
         main_data = ConnectionToData(country)
         main_data = main_data.make_main_data()
 
